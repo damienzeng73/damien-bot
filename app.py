@@ -1,3 +1,6 @@
+import requests
+from bs4 import BeautifulSoup
+
 from flask import Flask, request, abort
 
 from linebot import (
@@ -41,14 +44,14 @@ def apple_news():
     content = ""
 
     for index, data in enumerate(soup.select('.rtddt a'), 0):
-    if index == 10:
-        return content
+        if index == 10:
+            return content
 
-    url = data['href']
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, 'html.parser')
-    heading = soup.find('article', attrs={'class': 'ndArticle_leftColumn'}).find('h1').text
-    content += "{}\n{}\n".format(heading, data['href'])
+        url = data['href']
+        req = requests.get(url)
+        soup = BeautifulSoup(req.text, 'html.parser')
+        heading = soup.find('article', attrs={'class': 'ndArticle_leftColumn'}).find('h1').text
+        content += "{}\n{}\n".format(heading, data['href'])
 
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -57,7 +60,7 @@ def handle_message(event):
         content = apple_news()
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=event.message.text)
+            TextSendMessage(text=content)
         )
     else:
         line_bot_api.reply_message(
