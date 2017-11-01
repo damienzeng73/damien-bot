@@ -51,13 +51,36 @@ def apple_news():
         req = requests.get(url)
         soup = BeautifulSoup(req.text, 'html.parser')
         heading = soup.find('article', attrs={'class': 'ndArticle_leftColumn'}).find('h1').text
-        content += "{}\n{}\n".format(heading, data['href'])
+        content += "{}\n{}\n\n".format(heading, data['href'])
+
+
+def yahoo_movies():
+    target_url = 'https://tw.movies.yahoo.com/movie_thisweek.html'
+    req = requests.get(target_url)
+    soup = BeautifulSoup(req.text, 'html.parser')
+    content = ""
+
+    for index, data in enumerate(soup.select('.release_info_text'), 0):
+        heading = data.find('div', attrs={'class': 'release_movie_name'}).find('a', attrs={'class': 'gabtn'}, href=True)
+        name = heading.text.strip()
+        link = heading['href']
+        time = data.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
+
+        content += "{}\n{}\n{}\n\n".format(name, time, link)
+
+    return content
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text == 'Apple news':
         content = apple_news()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content)
+        )
+    elif event.message.text == 'Yahoo movies':
+        content = yahoo_movies()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content)
