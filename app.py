@@ -51,7 +51,9 @@ def apple_news():
         req = requests.get(url)
         soup = BeautifulSoup(req.text, 'html.parser')
         heading = soup.find('article', attrs={'class': 'ndArticle_leftColumn'}).find('h1').text
-        content += "{}\n{}\n\n".format(heading, data['href'])
+        link = data['href']
+
+        content += "{}\n{}\n\n".format(heading, link)
 
 
 def yahoo_movies():
@@ -75,21 +77,15 @@ def yahoo_movies():
 def handle_message(event):
     if event.message.text == 'Apple news':
         content = apple_news()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=content)
-        )
     elif event.message.text == 'Yahoo movies':
         content = yahoo_movies()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=content)
-        )
     else:
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=event.message.text)
-        )
+        content = event.message.text
+
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=content)
+    )
 
 
 if __name__ == "__main__":
