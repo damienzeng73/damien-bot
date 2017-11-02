@@ -9,9 +9,7 @@ from linebot import (
 from linebot.exceptions import (
     InvalidSignatureError
 )
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
-)
+from linebot.models import *
 
 app = Flask(__name__)
 
@@ -81,6 +79,31 @@ def handle_message(event):
         content = yahoo_movies()
     else:
         content = event.message.text
+
+        buttons_template = TemplateSendMessage(
+            alt_text='目錄 template',
+            template=ButtonsTemplate(
+                title='選擇服務',
+                text='請選擇',
+                actions=[
+                    MessageTemplateAction(
+                        label='蘋果即時新聞',
+                        text='Apple news'
+                    ),
+                    MessageTemplateAction(
+                        label='Yahoo奇摩電影',
+                        text='Yahoo movies'
+                    )
+                ]
+            )
+        )
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            buttons_template
+        )
+
+        return
 
     line_bot_api.reply_message(
         event.reply_token,
