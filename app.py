@@ -41,12 +41,12 @@ def apple_news():
     res = BeautifulSoup(req.text, 'html.parser')
     content = ""
 
-    for index, element in enumerate(res.select('.rtddt a'), 0):
+    for index, data in enumerate(res.select('.rtddt a'), 0):
         if index == 10:
             return content
 
-        heading = element.select_one('h1').text
-        link = element['href']
+        heading = data.select_one('h1').text
+        link = data['href']
 
         content += "{}\n{}\n\n".format(heading, link)
 
@@ -55,15 +55,24 @@ def yahoo_movies():
     target_url = 'https://tw.movies.yahoo.com/movie_thisweek.html'
     req = requests.get(target_url)
     res = BeautifulSoup(req.text, 'html.parser')
+    pages = len(res.select_one('.page_numbox').find_all('li')) - 4
     content = ""
 
-    for index, element in enumerate(res.select('.release_info_text'), 0):
-        heading = element.find('div', attrs={'class': 'release_movie_name'}).find('a', attrs={'class': 'gabtn'}, href=True)
-        name = heading.text.strip()
-        link = heading['href']
-        time = element.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
+    for i in range(pages):
+        if i == 0:
+            pass
+        else:
+            target_url = 'https://tw.movies.yahoo.com/movie_thisweek.html?page={}'.format(str(i + 1))
+            req = requests.get(target_url)
+            res = BeautifulSoup(req.text, 'html.parser')
 
-        content += "{}\n{}\n{}\n\n".format(name, time, link)
+        for data in res.select('.release_info_text'):
+            heading = data.find('div', attrs={'class': 'release_movie_name'}).find('a', attrs={'class': 'gabtn'}, href=True)
+            name = heading.text.strip()
+            link = heading['href']
+            time = data.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
+
+            content += "{}\n{}\n{}\n\n".format(name, time, link)
 
     return content
 
