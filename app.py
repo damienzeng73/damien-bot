@@ -38,18 +38,15 @@ def callback():
 def apple_news():
     target_url = 'https://tw.appledaily.com/new/realtime'
     req = requests.get(target_url)
-    soup = BeautifulSoup(req.text, 'html.parser')
+    res = BeautifulSoup(req.text, 'html.parser')
     content = ""
 
-    for index, data in enumerate(soup.select('.rtddt a'), 0):
+    for index, element in enumerate(res.select('.rtddt a'), 0):
         if index == 10:
             return content
 
-        url = data['href']
-        req = requests.get(url)
-        soup = BeautifulSoup(req.text, 'html.parser')
-        heading = soup.find('article', attrs={'class': 'ndArticle_leftColumn'}).find('h1').text
-        link = data['href']
+        heading = element.select_one('h1').text
+        link = element['href']
 
         content += "{}\n{}\n\n".format(heading, link)
 
@@ -57,14 +54,14 @@ def apple_news():
 def yahoo_movies():
     target_url = 'https://tw.movies.yahoo.com/movie_thisweek.html'
     req = requests.get(target_url)
-    soup = BeautifulSoup(req.text, 'html.parser')
+    res = BeautifulSoup(req.text, 'html.parser')
     content = ""
 
-    for index, data in enumerate(soup.select('.release_info_text'), 0):
-        heading = data.find('div', attrs={'class': 'release_movie_name'}).find('a', attrs={'class': 'gabtn'}, href=True)
+    for index, element in enumerate(res.select('.release_info_text'), 0):
+        heading = element.find('div', attrs={'class': 'release_movie_name'}).find('a', attrs={'class': 'gabtn'}, href=True)
         name = heading.text.strip()
         link = heading['href']
-        time = data.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
+        time = element.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
 
         content += "{}\n{}\n{}\n\n".format(name, time, link)
 
