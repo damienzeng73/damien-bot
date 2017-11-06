@@ -3,6 +3,9 @@ Damien-bot
 
 Use this QR code to add Damien-bot as a friend.
 
+Description
+-----------
+
 ![alt text](https://i.imgur.com/YZAqp3N.png "QR code")
 
 ### 功能表
