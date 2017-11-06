@@ -7,12 +7,12 @@ Use this QR code to add Damien-bot as a friend.
 
 ### 功能表
 
-![alt text](https://i.imgur.com/WQJxL5Z.png "Menu")
+![alt text](https://i.imgur.com/WQJxL5Zl.png "Menu")
 
 ### 即時新聞
 
-![alt text](https://i.imgur.com/P4CH8pw.png "Apple news")
+![alt text](https://i.imgur.com/P4CH8pwl.png "Apple news")
 
 ### 本週上映電影
 
-![alt text](https://i.imgur.com/iPgxeOf.png "Yahoo movies")
+![alt text](https://i.imgur.com/iPgxeOfl.png "Yahoo movies")
