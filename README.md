@@ -1,6 +1,8 @@
 Damien-bot
 ==========
 
+A simple LINE bot.
+
 Description
 -----------
 
