@@ -3,8 +3,8 @@ Damien-bot
 
 A simple LINE bot.
 
-Description
------------
+Getting Started
+---------------
 
 Use this QR code to add Damien-bot as a friend.
 
@@ -21,3 +21,9 @@ Use this QR code to add Damien-bot as a friend.
 ### 本週上映電影
 
 ![alt text](https://i.imgur.com/iPgxeOfl.png "Yahoo movies")
+
+Built With
+----------
+
+* [Flask](http://flask.pocoo.org/) - A python web framework
+* [Heroku](https://www.heroku.com/) - A cloud application platform
