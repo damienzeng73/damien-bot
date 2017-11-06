@@ -71,8 +71,9 @@ def yahoo_movies():
             name = heading.text.strip()
             link = heading['href']
             time = data.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
+            expectancy = data.find('div', attrs={'class': 'leveltext'}).select_one('span').text
 
-            content += "{}\n{}\n{}\n\n".format(name, time, link)
+            content += "{}\n{}\n期待度: {}\n{}\n\n".format(name, time, expectancy, link)
 
     return content
 
