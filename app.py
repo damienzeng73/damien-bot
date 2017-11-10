@@ -104,7 +104,7 @@ def ptt_gossiping():
     res = rs.post('https://www.ptt.cc/ask/over18', verify=False, data=data)
     soup = BeautifulSoup(res.text, 'html.parser')
     last_page_url = 'https://www.ptt.cc' + soup.select('.btn.wide')[1]['href']
-    content = crawl_ptt(res)
+    content = ""
 
     while (len(content.split('https')) - 1) < 10:
         current_page_index = last_page_url.split('index')[1].split('.html')[0]
