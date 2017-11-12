@@ -78,18 +78,20 @@ def yahoo_movies():
     return content
 
 
-def crawl_ptt(res):
+def crawl_ptt(res, content):
     soup = BeautifulSoup(res.text, 'html.parser')
-    content = ""
 
     for index, data in enumerate(soup.select('.r-ent'), 0):
+        if len(content) == 10:
+            break
+
         pushes = data.select_one('.nrec').text
         if pushes == '爆' or (pushes != '' and 'X' not in pushes and int(pushes) > 10):
             title = data.find('a', href=True)
             heading = title.text
             link = 'https://www.ptt.cc' + title['href']
 
-            content += "{}\n{}\n\n".format(heading, link)
+            content.append("{}\n{}\n".format(heading, link))
 
     return content
 
@@ -104,16 +106,16 @@ def ptt_gossiping():
     res = rs.post('https://www.ptt.cc/ask/over18', verify=False, data=data)
     soup = BeautifulSoup(res.text, 'html.parser')
     last_page_url = 'https://www.ptt.cc' + soup.select('.btn.wide')[1]['href']
-    content = ""
+    content = []
 
-    while (len(content.split('https')) - 1) < 10:
+    while (len(content) < 10):
         current_page_index = last_page_url.split('index')[1].split('.html')[0]
         last_page_url = 'https://www.ptt.cc' + '/bbs/Gossiping/index{}.html'.format(str(int(current_page_index) - 1))
 
         res = rs.get(last_page_url, verify=False)
-        content += crawl_ptt(res)
+        content = crawl_ptt(res, content)
 
-    return content
+    return "\n".join(content)
 
 
 @handler.add(MessageEvent, message=TextMessage)
