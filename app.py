@@ -78,20 +78,44 @@ def yahoo_movies():
     return content
 
 
-def crawl_ptt(res, content):
+def crawl_ptt(res, board, session=None):
     soup = BeautifulSoup(res.text, 'html.parser')
+    content = []
 
-    for index, data in enumerate(soup.select('.r-ent'), 0):
-        if len(content) == 10:
-            break
+    while (len(content) < 10):
+        for index, data in enumerate(soup.select('.r-ent'), 0):
+            if len(content) == 10:
+                break
 
-        pushes = data.select_one('.nrec').text
-        if pushes == '爆' or (pushes != '' and 'X' not in pushes and int(pushes) > 10):
-            title = data.find('a', href=True)
-            heading = title.text
-            link = 'https://www.ptt.cc' + title['href']
+            if board == 'Gossiping':
+                title = data.find('a', href=True)
+                heading = title.text
+                link = 'https://www.ptt.cc' + title['href']
 
-            content.append("{}\n{}\n".format(heading, link))
+                if '公告' in heading:
+                    continue
+
+                content.append("{}\n{}\n".format(heading, link))
+
+            elif board == 'Beauty':
+                pushes = data.select_one('.nrec').text
+                if pushes == '爆' or (pushes != '' and 'X' not in pushes and int(pushes) > 10):
+                    title = data.find('a', href=True)
+                    heading = title.text
+                    link = 'https://www.ptt.cc' + title['href']
+
+                    if '公告' in heading:
+                        continue
+
+                    content.append("{}\n{}\n".format(heading, link))
+
+        last_page_url = 'https://www.ptt.cc' + soup.select('.btn.wide')[1]['href']
+        if session is not None:
+            res = session.get(last_page_url, verify=False)
+        else:
+            res = requests.get(last_page_url)
+
+        soup = BeautifulSoup(res.text, 'html.parser')
 
     return content
 
@@ -104,16 +128,15 @@ def ptt_gossiping():
     }
 
     res = rs.post('https://www.ptt.cc/ask/over18', verify=False, data=data)
-    soup = BeautifulSoup(res.text, 'html.parser')
-    last_page_url = 'https://www.ptt.cc' + soup.select('.btn.wide')[1]['href']
-    content = []
+    content = crawl_ptt(res, 'Gossiping', rs)
 
-    while (len(content) < 10):
-        current_page_index = last_page_url.split('index')[1].split('.html')[0]
-        last_page_url = 'https://www.ptt.cc' + '/bbs/Gossiping/index{}.html'.format(str(int(current_page_index) - 1))
+    return "\n".join(content)
 
-        res = rs.get(last_page_url, verify=False)
-        content = crawl_ptt(res, content)
+
+def ptt_beauty():
+    target_url = 'https://www.ptt.cc/bbs/Beauty/index.html'
+    res = requests.get(target_url)
+    content = crawl_ptt(res, 'Beauty')
 
     return "\n".join(content)
 
@@ -126,6 +149,8 @@ def handle_message(event):
         content = yahoo_movies()
     elif event.message.text == 'PTT Gossiping':
         content = ptt_gossiping()
+    elif event.message.text == 'PTT Beauty':
+        content = ptt_beauty()
     else:
         content = event.message.text
 
@@ -144,8 +169,12 @@ def handle_message(event):
                         text='Yahoo movies'
                     ),
                     MessageTemplateAction(
-                        label='PTT八卦板大於10推文章',
+                        label='PTT八卦板最新文章',
                         text='PTT Gossiping'
+                    ),
+                    MessageTemplateAction(
+                        label='PTT表特板大於10推文章',
+                        text='PTT Beauty'
                     )
                 ]
             )
