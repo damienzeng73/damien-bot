@@ -51,7 +51,7 @@ def apple_news():
         content += "{}\n{}\n\n".format(heading, link)
 
 
-def yahoo_movies():
+def movie_thisweek():
     target_url = 'https://tw.movies.yahoo.com/movie_thisweek.html'
     res = requests.get(target_url)
     soup = BeautifulSoup(res.text, 'html.parser')
@@ -74,6 +74,25 @@ def yahoo_movies():
             expectancy = data.find('div', attrs={'class': 'leveltext'}).select_one('span').text
 
             content += "{}\n{}\n期待度: {}\n{}\n\n".format(name, time, expectancy, link)
+
+    return content
+
+
+def movie_intheaters():
+    target_url = 'https://tw.movies.yahoo.com/movie_intheaters.html'
+    req = requests.get(target_url)
+    res = BeautifulSoup(req.text, 'html.parser')
+    content = ""
+
+    for index, data in enumerate(res.select('.release_info_text'), 0):
+        heading = data.find('div', attrs={'class': 'release_movie_name'}).find('a', attrs={'class': 'gabtn'}, href=True)
+        name = heading.text.strip()
+        link = heading['href']
+        time = data.find('div', attrs={'class': 'release_movie_time'}).text.split('：')[1].strip()
+        expectancy = data.find('div', attrs={'class': 'leveltext'}).select_one('span').text
+        rate = data.find('div', attrs={'class': 'starwithnum'}).select_one('span')['data-num']
+
+        content += "{}\n{}\n期待度: {}\n滿意度: {} 星\n{}\n\n".format(name, time, expectancy, rate, link)
 
     return content
 
@@ -145,15 +164,65 @@ def ptt_beauty():
 def handle_message(event):
     if event.message.text == 'Apple news':
         content = apple_news()
-    elif event.message.text == 'Yahoo movies':
-        content = yahoo_movies()
+    elif event.message.text == 'Movie thisweek':
+        content = movie_thisweek()
+    elif event.message.text == 'Movie intheaters':
+        content = movie_intheaters()
     elif event.message.text == 'PTT Gossiping':
         content = ptt_gossiping()
     elif event.message.text == 'PTT Beauty':
         content = ptt_beauty()
-    else:
-        content = event.message.text
+    elif event.message.text == 'Yahoo movies':
+        buttons_template = TemplateSendMessage(
+            alt_text='目錄 template',
+            template=ButtonsTemplate(
+                title='選擇服務',
+                text='請選擇',
+                actions=[
+                    MessageTemplateAction(
+                        label='本週新片',
+                        text='Movie thisweek'
+                    ),
+                    MessageTemplateAction(
+                        label='上映中',
+                        text='Movie intheaters'
+                    )
+                ]
+            )
+        )
 
+        line_bot_api.reply_message(
+            event.reply_token,
+            buttons_template
+        )
+
+        return
+    elif event.message.text == 'PTT':
+        buttons_template = TemplateSendMessage(
+            alt_text='目錄 template',
+            template=ButtonsTemplate(
+                title='選擇服務',
+                text='請選擇',
+                actions=[
+                    MessageTemplateAction(
+                        label='PTT八卦板最新文章',
+                        text='PTT Gossiping'
+                    ),
+                    MessageTemplateAction(
+                        label='PTT表特板大於10推文章',
+                        text='PTT Beauty'
+                    )
+                ]
+            )
+        )
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            buttons_template
+        )
+
+        return
+    else:
         buttons_template = TemplateSendMessage(
             alt_text='目錄 template',
             template=ButtonsTemplate(
@@ -165,16 +234,12 @@ def handle_message(event):
                         text='Apple news'
                     ),
                     MessageTemplateAction(
-                        label='本週上映電影',
+                        label='Yahoo奇摩電影',
                         text='Yahoo movies'
                     ),
                     MessageTemplateAction(
-                        label='PTT八卦板最新文章',
-                        text='PTT Gossiping'
-                    ),
-                    MessageTemplateAction(
-                        label='PTT表特板大於10推文章',
-                        text='PTT Beauty'
+                        label='PTT',
+                        text='PTT'
                     )
                 ]
             )
