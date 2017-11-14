@@ -126,7 +126,7 @@ def crawl_ptt(res, board, session=None):
                     if '公告' in heading:
                         continue
 
-                    content.append("{}\n{}\n".format(heading, link))
+                    content.append("[{}推] {}\n{}\n".format(pushes, heading, link))
 
         last_page_url = 'https://www.ptt.cc' + soup.select('.btn.wide')[1]['href']
         if session is not None:
@@ -290,6 +290,10 @@ def handle_message(event):
                     MessageTemplateAction(
                         label='PTT',
                         text='PTT'
+                    ),
+                    URITemplateAction(
+                        label='查看原始碼',
+                        uri='https://github.com/damnee562/Damien-bot'
                     )
                 ]
             )
