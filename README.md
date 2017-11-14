@@ -12,15 +12,29 @@ Use this QR code to add Damien-bot as a friend.
 
 ### 功能表
 
-![alt text](https://i.imgur.com/WQJxL5Zl.png "Menu")
+![alt text](https://i.imgur.com/odjmYXZl.png "Menu")
 
 ### 即時新聞
 
-![alt text](https://i.imgur.com/P4CH8pwl.png "Apple news")
+![alt text](https://i.imgur.com/NBUtTcbl.png "Apple news")
 
-### 本週上映電影
+### Yahoo奇摩電影
 
-![alt text](https://i.imgur.com/iPgxeOfl.png "Yahoo movies")
+![alt text](https://i.imgur.com/PlGFTm1l.png "Yahoo movies")
+
+![alt text](https://i.imgur.com/AZdZLAGl.png "Movie thisweek")
+
+![alt text](https://i.imgur.com/SsPo8Kll.png "Movie thisweek")
+
+### PTT
+
+![alt text](https://i.imgur.com/tv8Ck4xl.png "PTT")
+
+![alt text](https://i.imgur.com/HdI9Qzgl.png "PTT Gossiping")
+
+![alt text](https://i.imgur.com/wir3yNdl.png "PTT Beauty")
+
+![alt text](https://i.imgur.com/1Z0oq7Ml.png "PTT random picture")
 
 Built With
 ----------
