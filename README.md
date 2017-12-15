@@ -3,6 +3,7 @@ A simple LINE bot.
 
 ## Getting Started
 Use this QR code to add **Damien-bot** as a friend.
+
 ![alt text](https://i.imgur.com/YZAqp3N.png "QR code")
 
 ### 功能表
