@@ -37,3 +37,6 @@ Use this QR code to add **Damien-bot** as a friend.
 * [Flask](http://flask.pocoo.org/) - A Python web framework
 * [line-bot-sdk-python](https://github.com/line/line-bot-sdk-python) - SDK of LINE Messaging API for Python
 * [Heroku](https://www.heroku.com/) - A cloud application platform
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
