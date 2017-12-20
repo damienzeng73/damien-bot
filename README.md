@@ -39,4 +39,4 @@ Use this QR code to add **Damien-bot** as a friend.
 * [Heroku](https://www.heroku.com/) - A cloud application platform
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
